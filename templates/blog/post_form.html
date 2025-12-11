@@ -1,27 +1,54 @@
 {% extends "base.html" %}
-{% block title %}{% if object %}Edit {{ object.title }}{% else %}Create Post{% endif %} — Lumina Blog{% endblock %}
+{% block title %}{% if object %}Edit {{ object.title }}{% else %}Create Post{% endif %} — Abedin Blog{% endblock %}
 {% block content %}
-<section class="form-shell">
-    <p class="eyebrow">{% if object %}Edit post{% else %}New post{% endif %}</p>
-    <h1>{% if object %}Update your story{% else %}Write something great{% endif %}</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <label>Title {{ form.title }}</label>
-        <label>Excerpt <small>(optional)</small> {{ form.excerpt }}</label>
-        <label>Content {{ form.content }}</label>
-        <label>Cover image {{ form.cover_image }}</label>
-        {% if object and object.cover_image %}
-            <div class="thumb-preview">
-                <p class="eyebrow">Current image</p>
-                <img src="{{ object.cover_image.url }}" alt="{{ object.title }}">
+<section class="form-shell form-grid">
+    <div>
+        <p class="eyebrow">{% if object %}Edit post{% else %}New post{% endif %}</p>
+        <h1>{% if object %}Polish your story{% else %}Craft a new story{% endif %}</h1>
+        <p class="muted">Write, add a cover image, and toggle publish. Everything is saved when you hit Save.</p>
+        <form method="post" enctype="multipart/form-data" class="stacked-form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="input-group">
+                <label>Title</label>
+                {{ form.title }}
+                <p class="hint">Keep it concise and clear.</p>
             </div>
-        {% endif %}
-        <label class="checkbox">{{ form.published }} Published</label>
-        <div class="form-shell__actions">
-            <button class="btn btn-primary" type="submit">Save</button>
-            <a class="btn btn-ghost" href="{% url 'blog:post_list' %}">Cancel</a>
+            <div class="input-group">
+                <label>Excerpt <span class="badge">Optional</span></label>
+                {{ form.excerpt }}
+                <p class="hint">A short teaser shown on cards and shares.</p>
+            </div>
+            <div class="input-group">
+                <label>Content</label>
+                {{ form.content }}
+                <p class="hint">Use paragraphs and line breaks for readability.</p>
+            </div>
+            <div class="input-group">
+                <label>Cover image</label>
+                {{ form.cover_image }}
+                <p class="hint">Landscape photos work best.</p>
+            </div>
+            <label class="checkbox">
+                {{ form.published }} Publish immediately
+            </label>
+            <div class="form-shell__actions">
+                <button class="btn btn-primary" type="submit">Save</button>
+                <a class="btn btn-ghost" href="{% url 'blog:post_list' %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <div class="panel">
+        <p class="eyebrow">Preview</p>
+        <div class="preview-card">
+            <div class="preview-image" style="background-image:url('{% if object and object.cover_image %}{{ object.cover_image.url }}{% else %}https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80{% endif %}');"></div>
+            <div class="preview-body">
+                <p class="card__meta">{% if object %}Updated {{ object.updated_at|date:"M j, Y" }}{% else %}Draft preview{% endif %}</p>
+                <h3>{{ object.title|default:"Your title here" }}</h3>
+                <p class="card__excerpt">{{ object.excerpt|default:"Write a short excerpt to entice readers." }}</p>
+                <span class="pill">{% if object %}Published{% else %}Draft{% endif %}</span>
+            </div>
         </div>
-    </form>
+    </div>
 </section>
 {% endblock %}
