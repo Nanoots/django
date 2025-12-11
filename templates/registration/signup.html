@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Create account — Abedin Blog{% endblock %}
+{% block content %}
+<section class="form-shell">
+    <p class="eyebrow">Join Abedin</p>
+    <h1>Create your account</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <label>Username {{ form.username }}</label>
+        <label>Password {{ form.password1 }}</label>
+        <label>Confirm password {{ form.password2 }}</label>
+        <div class="form-shell__actions">
+            <button class="btn btn-primary" type="submit">Sign up</button>
+            <a class="btn btn-ghost" href="{% url 'login' %}">Back to login</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
