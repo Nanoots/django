@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Edit {{ object.title }}{% else %}Create Post{% endif %} — Lumina Blog{% endblock %}
+{% block content %}
+<section class="form-shell">
+    <p class="eyebrow">{% if object %}Edit post{% else %}New post{% endif %}</p>
+    <h1>{% if object %}Update your story{% else %}Write something great{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <label>Title {{ form.title }}</label>
+        <label>Excerpt <small>(optional)</small> {{ form.excerpt }}</label>
+        <label>Content {{ form.content }}</label>
+        <label>Cover image {{ form.cover_image }}</label>
+        {% if object and object.cover_image %}
+            <div class="thumb-preview">
+                <p class="eyebrow">Current image</p>
+                <img src="{{ object.cover_image.url }}" alt="{{ object.title }}">
+            </div>
+        {% endif %}
+        <label class="checkbox">{{ form.published }} Published</label>
+        <div class="form-shell__actions">
+            <button class="btn btn-primary" type="submit">Save</button>
+            <a class="btn btn-ghost" href="{% url 'blog:post_list' %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

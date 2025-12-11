@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Abedin Blog — Fresh Stories{% endblock %}
+{% block content %}
+<section class="hero hero--image">
+    <div class="hero__text">
+        <p class="eyebrow">Featured</p>
+        <h1>Stories worth sharing, captured beautifully.</h1>
+        <p class="lede">Publish photo-led posts quickly and keep readers engaged with a crisp, airy layout.</p>
+        <div class="hero__actions">
+            <a class="btn btn-primary" href="{% url 'blog:post_create' %}">Write a post</a>
+            <a class="btn btn-ghost" href="{% url 'blog:post_list' %}">Browse posts</a>
+        </div>
+    </div>
+</section>
+
+<section class="filter-row">
+    <div class="chips">
+        {% for cat in categories %}
+            <button class="chip{% if forloop.first %} chip--active{% endif %}">{{ cat }}</button>
+        {% endfor %}
+    </div>
+    <div class="filter-row__cta">
+        <span>Need inspiration?</span>
+        <a class="btn btn-ghost" href="{% url 'blog:post_create' %}">Create post</a>
+    </div>
+</section>
+
+<section class="layout">
+    <div class="grid">
+        {% for post in posts %}
+            <article class="card">
+                <div class="card__image" style="background-image: url('{% if post.cover_image %}{{ post.cover_image.url }}{% else %}https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80{% endif %}');"></div>
+                <div class="card__body">
+                    <p class="card__meta">by you · {{ post.created_at|date:"M j, Y" }}</p>
+                    <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                    <p class="card__excerpt">{{ post.excerpt|default:post.content|truncatewords:24 }}</p>
+                    <div class="card__footer">
+                        <span class="pill">People</span>
+                        <a class="btn btn-text" href="{{ post.get_absolute_url }}">Read more →</a>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <div class="empty">
+                <p>No posts yet. Start by writing your first story.</p>
+                <a class="btn btn-primary" href="{% url 'blog:post_create' %}">Create post</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <aside class="sidebar">
+        <div class="card sidebar__card">
+            <h3>Latest posts</h3>
+            <div class="sidebar__list">
+                {% for post in latest_posts %}
+                    <a class="sidebar__item" href="{{ post.get_absolute_url }}">
+                        <div class="thumb" style="background-image:url('{% if post.cover_image %}{{ post.cover_image.url }}{% else %}https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=80{% endif %}');"></div>
+                        <div>
+                            <p class="sidebar__meta">{{ post.created_at|date:"M j, Y" }}</p>
+                            <p class="sidebar__title">{{ post.title }}</p>
+                        </div>
+                    </a>
+                {% empty %}
+                    <p class="muted">No posts yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </aside>
+</section>
+{% endblock %}

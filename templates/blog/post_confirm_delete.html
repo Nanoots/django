@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Delete {{ object.title }} — Lumina Blog{% endblock %}
+{% block content %}
+<section class="form-shell">
+    <p class="eyebrow">Danger zone</p>
+    <h1>Delete this post?</h1>
+    <p>“{{ object.title }}” will be removed permanently.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-shell__actions">
+            <button class="btn btn-primary danger" type="submit">Delete</button>
+            <a class="btn btn-ghost" href="{{ object.get_absolute_url }}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
